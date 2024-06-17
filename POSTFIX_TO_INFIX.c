@@ -1,56 +1,35 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
-int top=-1;
-#define MAX 100
-
-void push(char stack[], char c) {
-    if (top == MAX - 1) {
-        printf("Overflow\n");
-        exit(1);
-    }
-    stack[++top] = c;
-}
-
-char pop(char stack[]) {
-    if (top == -1) {
-        printf("Underflow\n");
-        exit(1);
-    }
-    return stack[top--];
-}
-
-void postfixtoinfix(char postfix[]) {
-    int i, len;
-    char stack[MAX];
-    char temp[MAX];
-    
-
-    len = strlen(postfix);
-    for (i = 0; i <len; i++) {
-        if (isalnum(postfix[i])) {
-            push(stack, postfix[i]);
-        } else {
-            char b = pop(stack);
-            char a = pop(stack);
-            sprintf(temp, "(%c %c %c)", a, postfix[i], b);
-            int j=0;
-            while(temp[j]!='\0')
-            {
-                push(stack,temp[j]);
-                j++;
-            }
+#include<stdio.h>
+#include<ctype.h>
+#include<string.h>
+#define max 100
+void postfixtoinfix(char source[],char target[])
+{
+    char temp[max],s[100][100];
+    int len=strlen(source);
+    int i=0,k=0;
+    strcpy(target,"");
+    for(i=0;i<len;i++)
+    {
+        if(isalpha(source[i]))
+        {
+            char t[]={source[i],'\0'};
+            strcpy(s[k++],t);
+        }
+        else{
+            char *op2=s[--k];
+            char *op1=s[--k];
+            sprintf(temp,"(%s%c%s)",op1,source[i],op2);
+            strcpy(s[k++],temp);
         }
     }
-
-    printf("Infix expression: %s\n", stack);
+    strcpy(target,s[--k]);
 }
-
-int main() {
-    char postfix[MAX];
-    printf("Enter the postfix expression: ");
-    scanf("%s", postfix);
-    postfixtoinfix(postfix);
-    return 0;
+int main()
+{
+    char postfix[max];
+    printf("Enter the postfix expression\n");
+    scanf("%s",postfix);
+    char infix[max];
+    postfixtoinfix(postfix,infix);
+    printf("Infix expression is %s\n",infix);
 }
